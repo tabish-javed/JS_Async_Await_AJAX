@@ -100,6 +100,18 @@ getCountryData('United States');
 */
 
 // USING PROMISES - Consuming and Chaining Promises //
+// function getCountryData (country) {
+//     const url = `https://restcountries.com/v3.1/name/${country}?fullText=true`;
+//     fetch(url)                          // fetch() returns promise
+//         .then(function (response) {     // received response when promise is fulfilled
+//             console.log(response);      // to retrieve data from a response we need to call json()
+//             return response.json();     // json() returns a new promise again
+//         })
+//         .then(function ([data]) {       // response of the json() promise is the data itself
+//             console.log(data);
+//             renderCountry(data)
+//         });
+// }
 
 function renderCountry (data, className = '') {
     const html = `
@@ -115,28 +127,20 @@ function renderCountry (data, className = '') {
         </article>
     `;
     countriesContainer.insertAdjacentHTML('beforeend', html);
-    countriesContainer.style.opacity = 1;
+    // countriesContainer.style.opacity = 1;
 }
 
+function renderError (message) {
+    countriesContainer.insertAdjacentText('beforeend', message)
+    // countriesContainer.style.opacity = 1
+}
 
-// function getCountryData (country) {
-//     const url = `https://restcountries.com/v3.1/name/${country}?fullText=true`;
-//     fetch(url)                          // fetch() returns promise
-//         .then(function (response) {     // received response when promise is fulfilled
-//             console.log(response);      // to retrieve data from a response we need to call json()
-//             return response.json();     // json() returns a new promise again
-//         })
-//         .then(function ([data]) {       // response of the json() promise is the data itself
-//             console.log(data);
-//             renderCountry(data)
-//         });
-// }
 
 function getCountryData (country) {
     const url = `https://restcountries.com/v3.1/name/${country}?fullText=true`;
     // Country-1
     fetch(url)
-        .then(response => response.json())
+        .then(response => response.json())  // <- Promise handler
         .then(([data]) => {
             renderCountry(data);
 
@@ -148,7 +152,16 @@ function getCountryData (country) {
             return fetch(url2);
         })
         .then(response => response.json())
-        .then(([data]) => renderCountry(data, 'neighbour'));
+        .then(([data]) => renderCountry(data, 'neighbour'))
+        .catch(error => {   // <- Error Handler
+            console.error(error)
+            renderError(`${error}`)
+        })
+        .finally(() => {    // <- Handler for running the code regardless of promise fulfilled or rejected
+            countriesContainer.style.opacity = 1
+        })
 }
 
-getCountryData('Germany');
+btn.addEventListener('click', function () {
+    getCountryData('Germanyy');
+})
