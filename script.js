@@ -39,7 +39,9 @@ function getCountryData (country) {
 
 getCountryData('India')
 
-*/
+
+
+// AJEX CALL-BACK HELL
 
 function renderCountry (data, className = '') {
     const html = `
@@ -89,10 +91,64 @@ function getCountryData (country) {
             console.log(data2);
             renderCountry(data2, 'neighbour')
         })
-
-
     });
 }
 
 // getCountryData('India');
 getCountryData('United States');
+
+*/
+
+// USING PROMISES - Consuming and Chaining Promises //
+
+function renderCountry (data, className = '') {
+    const html = `
+        <article class="country ${className}">
+        <img class="country__img" src="${data.flags.svg}" />
+        <div class="country__data">
+            <h3 class="country__name">${data.name.common}</h3>
+            <h4 class="country__region">${data.region}</h4>
+            <p class="country__row"><span>👫</span>${(+data.population / 1_000_000).toFixed(1)} millions</p>
+            <p class="country__row"><span>🗣️</span>${Object.entries(data.languages)[0][1]}</p>
+            <p class="country__row"><span>💰</span>${Object.entries(Object.entries(data.currencies)[0][1])[1][1]}</p>
+        </div>
+        </article>
+    `;
+    countriesContainer.insertAdjacentHTML('beforeend', html);
+    countriesContainer.style.opacity = 1;
+}
+
+
+// function getCountryData (country) {
+//     const url = `https://restcountries.com/v3.1/name/${country}?fullText=true`;
+//     fetch(url)                          // fetch() returns promise
+//         .then(function (response) {     // received response when promise is fulfilled
+//             console.log(response);      // to retrieve data from a response we need to call json()
+//             return response.json();     // json() returns a new promise again
+//         })
+//         .then(function ([data]) {       // response of the json() promise is the data itself
+//             console.log(data);
+//             renderCountry(data)
+//         });
+// }
+
+function getCountryData (country) {
+    const url = `https://restcountries.com/v3.1/name/${country}?fullText=true`;
+    // Country-1
+    fetch(url)
+        .then(response => response.json())
+        .then(([data]) => {
+            renderCountry(data);
+
+            const neighbor = data.borders?.[0];
+            if (!neighbor) return;
+            const url2 = `https://restcountries.com/v3.1/alpha/${neighbor}`;
+
+            // Country-2
+            return fetch(url2);
+        })
+        .then(response => response.json())
+        .then(([data]) => renderCountry(data, 'neighbour'));
+}
+
+getCountryData('Germany');
