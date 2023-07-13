@@ -20,31 +20,21 @@ function renderCountry (data, className = '') {
     countriesContainer.style.opacity = 1;
 }
 
-// JavaScript //
 
-// Construct URL without parameters
+// Construct URL and supply search parameters as object notation
 const apiEndPoint = new URL('https://geocode.maps.co/reverse');
-
 // Parameters in object form
 const parameters = {
     lat: 52.508,
     lon: 13.381
 }
-
 // Construct search parameters from object
 const searchParams = new URLSearchParams(parameters)
-
 // Add search parameters to URL
 apiEndPoint.search = searchParams
-
 // Final URL
-const finalURL = apiEndPoint.toString()
-
-// Print completed URL on console
-console.log(finalURL)
-
-
 const reverseLocationURL = apiEndPoint.toString()
+
 
 fetch(reverseLocationURL)
     .then(response => {
