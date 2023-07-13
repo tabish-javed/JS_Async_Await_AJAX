@@ -131,37 +131,77 @@ function renderCountry (data, className = '') {
 }
 
 function renderError (message) {
-    countriesContainer.insertAdjacentText('beforeend', message)
+    countriesContainer.insertAdjacentText('beforeend', message);
     // countriesContainer.style.opacity = 1
+}
+
+async function getJSON (url, errorMessage = '') {
+    const response = await fetch(url);
+    console.log(response)
+    if (!response.ok) throw new Error(`${errorMessage}. Status Code: ${response.status}`);
+    return await response.json();
 }
 
 
 function getCountryData (country) {
     const url = `https://restcountries.com/v3.1/name/${country}?fullText=true`;
     // Country-1
-    fetch(url)
-        .then(response => response.json())  // <- Promise handler
+    getJSON(url, 'Country not found!')
         .then(([data]) => {
             renderCountry(data);
-
             const neighbor = data.borders?.[0];
-            if (!neighbor) return;
-            const url2 = `https://restcountries.com/v3.1/alpha/${neighbor}`;
 
+            if (!neighbor) throw new Error('No Neighbor found!');
+
+            const url2 = `https://restcountries.com/v3.1/alpha/${neighbor}`;
             // Country-2
-            return fetch(url2);
+            return getJSON(url2, 'Country not found');
         })
-        .then(response => response.json())
         .then(([data]) => renderCountry(data, 'neighbour'))
-        .catch(error => {   // <- Error Handler
-            console.error(error)
-            renderError(`${error}`)
+        .catch(error => {
+            renderError(`${error}`);
         })
-        .finally(() => {    // <- Handler for running the code regardless of promise fulfilled or rejected
-            countriesContainer.style.opacity = 1
-        })
+        .finally(() => {
+            countriesContainer.style.opacity = 1;
+        });
 }
 
 btn.addEventListener('click', function () {
-    getCountryData('Germanyy');
-})
+    getCountryData('Russia');
+});
+
+
+
+// function getCountryData (country) {
+//     const url = `https://restcountries.com/v3.1/name/${country}?fullText=true`;
+//     // Country-1
+//     fetch(url)
+//         // <- Promise handler
+//         .then(response => {
+//             if (!response.ok) throw new Error(`Country "${country}" not found. Status Code: ${response.status}`);
+//             return response.json();
+//         })
+//         .then(([data]) => {
+//             renderCountry(data);
+
+//             const neighbor = data.borders?.[0];
+//             if (!neighbor) return;
+//             const url2 = `https://restcountries.com/v3.1/alpha/${neighbor}`;
+
+//             // Country-2
+//             return fetch(url2);
+//         })
+//         .then(response => response.json())
+//         .then(([data]) => renderCountry(data, 'neighbour'))
+//         .catch(error => {   // <- Error Handler
+//             console.error(error);
+//             renderError(`${error}`);
+//         })
+//         .finally(() => {    // <- Handler for running the code regardless of promise fulfilled or rejected
+//             countriesContainer.style.opacity = 1;
+//         });
+// }
+
+// btn.addEventListener('click', function () {
+//     getCountryData('Germanyy');
+// });
