@@ -24,10 +24,10 @@ function urlConstructor (url, pathName, parameters = '') {
     // Construct URL and supply search parameters as object notation
     const baseURL = new URL(url);
     // Construct search parameters from object
-    const searchParams = new URLSearchParams(parameters);
+    const addParameters = new URLSearchParams(parameters);
     // Add search parameters to URL
     baseURL.pathname = pathName
-    baseURL.search = searchParams;
+    baseURL.search = addParameters;
     // Final URL
     return baseURL.toString();
 }
