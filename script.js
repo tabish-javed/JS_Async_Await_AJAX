@@ -97,7 +97,6 @@ function getCountryData (country) {
 // getCountryData('India');
 getCountryData('United States');
 
-*/
 
 // USING PROMISES - Consuming and Chaining Promises //
 // function getCountryData (country) {
@@ -203,5 +202,22 @@ btn.addEventListener('click', function () {
 // }
 
 // btn.addEventListener('click', function () {
-//     getCountryData('Germanyy');
+//     getCountryData('Germany');
 // });
+
+
+
+// THE EVENT LOOP IN ACTION
+
+console.log('Test start!');
+setTimeout(() => console.log('0 sec timer', 0));
+Promise.resolve('Resolved promise 1').then(response => console.log(response));
+
+Promise.resolve('Resolved promise 2').then(response => {
+    for (let i = 0; i < 1_000_000; i++) { }
+    console.log(response)
+});
+
+console.log('Test end!')
+
+*/
