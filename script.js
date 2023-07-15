@@ -272,7 +272,7 @@ Promise.reject(new Error('abc')).then((x) => console.error(x))
 
 
 
-*/
+
 
 // CONSUMING PROMISES WITH ASYNC/AWAIT
 
@@ -284,7 +284,6 @@ const getPosition = function () {
 };
 
 // getPosition().then(position => console.log(position));
-
 
 
 function renderCountry (data, className = '') {
@@ -307,6 +306,7 @@ function renderCountry (data, className = '') {
 
 async function whereAmI () {
 
+    // ERROR HANDLING WITH TRY...CATCH
     try {
         let response;
 
@@ -314,8 +314,8 @@ async function whereAmI () {
         const { coords: { latitude, longitude } } = await getPosition();
 
         // Reverse geocoding
-        response = await fetch(`https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}`)
-        if (!response.ok) throw new Error('Can not reverse geocode')
+        response = await fetch(`https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}`);
+        if (!response.ok) throw new Error('Can not reverse geocode');
 
         const { address: { country } } = await response.json();
 
@@ -323,13 +323,16 @@ async function whereAmI () {
         response = await fetch(`https://restcountries.com/v3.1/name/${country}?fullText=true`);
 
         const [data] = await response.json();
-        console.log(data);
         renderCountry(data);
+        console.log(data);
+
+        return `You are in ${data.name.common}`;
+
     } catch (error) {
         console.error(error);
     }
-
-
 }
 
-whereAmI();
+whereAmI()
+
+*/
