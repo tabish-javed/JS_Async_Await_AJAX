@@ -83,13 +83,4 @@ function whereAmI () {
         });
 }
 
-// const latitude = 52.508;
-// const longitude = 13.381;
-
-// const latitude = 19.037;
-// const longitude = 72.873;
-
-// const latitude = -33.933;
-// const longitude = 18.474;
-
 whereAmI();
