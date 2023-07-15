@@ -220,4 +220,64 @@ Promise.resolve('Resolved promise 2').then(response => {
 
 console.log('Test end!')
 
+
+
+// PROMISIFY ASYNCHRONOUS FUNCTIONS
+const lotteryPromise = new Promise(function (resolve, reject) {
+console.log('Lottery draw is happening...')
+
+    setTimeout(() => {
+        if (Math.random() >= 0.5) {
+            resolve('You WON!');
+        } else {
+            reject(new Error('You LOST!'));
+        }
+    }, 2000);
+});
+
+lotteryPromise.then(response => console.log(response)).catch(error => console.error(error));
+
+// PROMISIFY MEANS CONVERTING/WRAPPING OLD NORMAL CALLBACK FUNCTIONS TO MICRO-TASKS/PROMISES
+// Converting callback based asynchronous functions/behaviors to promise based
+
+// Promisify "setTimeout"
+const wait = function (seconds) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, seconds * 1_000)
+    })
+};
+
+wait(2).then(() => {
+    console.log('I waited for 2 seconds');
+    return wait(1)
+}).then(() => {
+    console.log('I waited for 1 seconds');
+    return wait(1)
+}).then(() => {
+    console.log('I waited for 2 seconds');
+    return wait(1)
+}).then(() => {
+    console.log('I waited for 3 seconds');
+    return wait(1)
+}).then(() => {
+    console.log('I waited for 4 seconds');
+    return wait(1)
+});
+
+// Fullfil OR Reject Promise Immediately
+
+Promise.resolve('abc').then((x) => console.log(x))
+Promise.reject(new Error('abc')).then((x) => console.error(x))
+
 */
+
+
+
+const getPosition = function () {
+    return new Promise(function (resolve, reject) {
+        // navigator.geolocation.getCurrentPosition(position => resolve(position), error => reject(error));
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+};
+
+getPosition().then(position => console.log(position));
