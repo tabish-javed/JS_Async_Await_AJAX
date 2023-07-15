@@ -269,9 +269,12 @@ wait(2).then(() => {
 Promise.resolve('abc').then((x) => console.log(x))
 Promise.reject(new Error('abc')).then((x) => console.error(x))
 
+
+
+
 */
 
-
+// CONSUMING PROMISES WITH ASYNC/AWAIT
 
 const getPosition = function () {
     return new Promise(function (resolve, reject) {
@@ -280,4 +283,53 @@ const getPosition = function () {
     });
 };
 
-getPosition().then(position => console.log(position));
+// getPosition().then(position => console.log(position));
+
+
+
+function renderCountry (data, className = '') {
+    const html = `
+        <article class="country ${className}">
+        <img class="country__img" src="${data.flags.svg}" />
+        <div class="country__data">
+            <h3 class="country__name">${data.name.common}</h3>
+            <h4 class="country__region">${data.region}</h4>
+            <p class="country__row"><span>👫</span>${(+data.population / 1_000_000).toFixed(1)} millions</p>
+            <p class="country__row"><span>🗣️</span>${Object.entries(data.languages)[0][1]}</p>
+            <p class="country__row"><span>💰</span>${Object.entries(Object.entries(data.currencies)[0][1])[1][1]}</p>
+        </div>
+        </article>
+    `;
+    countriesContainer.insertAdjacentHTML('beforeend', html);
+    countriesContainer.style.opacity = 1;
+}
+
+
+async function whereAmI () {
+
+    try {
+        let response;
+
+        // Geolocation
+        const { coords: { latitude, longitude } } = await getPosition();
+
+        // Reverse geocoding
+        response = await fetch(`https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}`)
+        if (!response.ok) throw new Error('Can not reverse geocode')
+
+        const { address: { country } } = await response.json();
+
+        // Country data
+        response = await fetch(`https://restcountries.com/v3.1/name/${country}?fullText=true`);
+
+        const [data] = await response.json();
+        console.log(data);
+        renderCountry(data);
+    } catch (error) {
+        console.error(error);
+    }
+
+
+}
+
+whereAmI();
