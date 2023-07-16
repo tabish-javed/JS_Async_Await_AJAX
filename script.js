@@ -336,3 +336,36 @@ async function whereAmI () {
 whereAmI()
 
 */
+
+async function getJSON (url, errorMessage = '') {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`${errorMessage}. Status Code: ${response.status}`);
+    return await response.json();
+}
+
+// RUNNING ASYNC IN PARALLEL
+
+async function get3Countries (c1, c2, c3) {
+    try {
+        // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}?fullText=true`)
+        // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}?fullText=true`)
+        // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}?fullText=true`)
+        // console.log([data1.capital, data2.capital, data3.capital]);
+
+
+        const data = await Promise.all(
+            [
+                getJSON(`https://restcountries.com/v3.1/name/${c1}?fullText=true`),
+                getJSON(`https://restcountries.com/v3.1/name/${c2}?fullText=true`),
+                getJSON(`https://restcountries.com/v3.1/name/${c3}?fullText=true`),
+            ]
+        );
+
+        console.log(data.map(element => element[0].capital[0]));
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+get3Countries('portugal', 'canada', 'tanzania')
