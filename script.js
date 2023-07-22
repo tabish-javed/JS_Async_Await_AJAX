@@ -51,13 +51,50 @@ const request = fetch(url)
 
 console.log(request);
 
-*/
+
 
 const lotteryPromise = new Promise(function (resolve, reject) {
-    if (Math.random() >= 0.5) resolve('You WON!')
-    else reject('You LOST!')
-})
-    .then(response => console.log(response))
-    .catch(error => console.log(error))
 
-console.log(lotteryPromise)
+    setTimeout(function () {
+        if (Math.random() >= 0.5) resolve('You WON!');
+        else reject(new Error('You LOST!'));
+    }, 2 * 1_000);
+
+});
+
+lotteryPromise.then(response => console.log(response)).catch(error => console.error(error));
+
+*/
+
+
+// const position = navigator.geolocation.getCurrentPosition(
+//     position => console.log(position),
+//     error => console.log(error)
+// );
+
+async function getPosition () {
+    try {
+        return await new Promise(function (resolve, reject) {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+    } catch (error) {
+        throw new Error(`Browser location undetermined: ${error}`);
+    }
+}
+
+// getPosition().then(position => console.log(position)).catch(error => console.error(error));
+
+
+// As of today, return of an async function with await can happen only inside of another async function
+// Basically all async functions can exchange data
+// A top-level await is in proposal phase, let's see when it becomes available to use
+
+// Converting then-catch chain to an async function with await.
+(async function () {
+    try {
+        const position = await getPosition();
+        console.log(position)
+    } catch (error) {
+        console.error(error)
+    }
+})();
