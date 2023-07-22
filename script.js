@@ -64,7 +64,7 @@ const lotteryPromise = new Promise(function (resolve, reject) {
 
 lotteryPromise.then(response => console.log(response)).catch(error => console.error(error));
 
-*/
+
 
 
 // const position = navigator.geolocation.getCurrentPosition(
@@ -94,6 +94,41 @@ async function getPosition () {
     try {
         const position = await getPosition();
         console.log(position)
+    } catch (error) {
+        console.error(error)
+    }
+})();
+
+*/
+
+// RUNNING PROMISE RACE
+
+async function getJSON (url, errorMessage = '') {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`${errorMessage}. Status Code: ${response.status}`);
+    return await response.json();
+}
+
+
+function timeout (seconds) {
+    return new Promise(function (_, reject) {
+        setTimeout(() => {
+            reject(new Error(`Can't get data in time`));
+        }, seconds * 1_000);
+    });
+}
+
+// Running promise race against timeout
+
+(async function () {
+    try {
+        const response = await Promise.race([
+            getJSON(`https://restcountries.com/v3.1/name/India?fullText=true`),
+            getJSON(`https://restcountries.com/v3.1/name/France?fullText=true`),
+            getJSON(`https://restcountries.com/v3.1/name/Italy?fullText=true`),
+            timeout(0.7)
+        ]);
+        console.log(response)
     } catch (error) {
         console.error(error)
     }
