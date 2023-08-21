@@ -6,7 +6,6 @@ const countriesContainer = document.querySelector('.countries');
 
 //////////////////////////////////
 
-/*
 
 // AJEX USING WITHOUT FETCH (traditional way)
 
@@ -43,18 +42,14 @@ getCountryData('Portugal');
 getCountryData('United States');
 
 
-
 // USING PROMISES WITH FETCH
 
 const url = `https://restcountries.com/v3.1/name/India?fullText=true`;
-const request = fetch(url)
-
+const request = fetch(url);
 console.log(request);
 
 
-
 const lotteryPromise = new Promise(function (resolve, reject) {
-
     setTimeout(function () {
         if (Math.random() >= 0.5) resolve('You WON!');
         else reject(new Error('You LOST!'));
@@ -62,9 +57,9 @@ const lotteryPromise = new Promise(function (resolve, reject) {
 
 });
 
-lotteryPromise.then(response => console.log(response)).catch(error => console.error(error));
-
-
+lotteryPromise
+    .then(response => console.log(response))
+    .catch(error => console.error(error));
 
 
 // const position = navigator.geolocation.getCurrentPosition(
@@ -82,7 +77,9 @@ async function getPosition () {
     }
 }
 
-// getPosition().then(position => console.log(position)).catch(error => console.error(error));
+getPosition()
+    .then(position => console.log(position))
+    .catch(error => console.error(error));
 
 
 // As of today, return of an async function with await can happen only inside of another async function
@@ -93,13 +90,12 @@ async function getPosition () {
 (async function () {
     try {
         const position = await getPosition();
-        console.log(position)
+        console.log(position);
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
 })();
 
-*/
 
 // RUNNING PROMISE RACE
 
@@ -126,10 +122,10 @@ function timeout (seconds) {
             getJSON(`https://restcountries.com/v3.1/name/India?fullText=true`),
             getJSON(`https://restcountries.com/v3.1/name/France?fullText=true`),
             getJSON(`https://restcountries.com/v3.1/name/Italy?fullText=true`),
-            timeout(0.7)
+            timeout(0.2)
         ]);
-        console.log(response)
+        console.log(response);
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
 })();
